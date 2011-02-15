@@ -1,0 +1,4 @@
+0.3: 23 Sep 2009: Added mutable interface and removed some modules from the export list.
+0.2.2: 2 Sep 2009: Fixed a minor bug in internal handling.
+0.2.1: 25 Aug 2009: Fixed a serious bug in fromInteger conversion.
+0.2: 5 May 2009: Add support for functions new in mpfr 2.4.1
