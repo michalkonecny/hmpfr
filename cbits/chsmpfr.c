@@ -14,6 +14,17 @@ void clear (const mpfr_ptr p) {
   free (p);
 }
 
+gmp_randstate_t * new_gmp_randstate() {
+  gmp_randstate_t * state = (gmp_randstate_t *)malloc(sizeof(gmp_randstate_t));
+  gmp_randinit_default(* state);
+  return state;
+}
+
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP))
+{
+  return mpfr_urandomb(dP, * rsP);
+}
+
 int mpfr_nan_p_wrap(const mpfr_ptr p) {
   return mpfr_nan_p(p);
 }

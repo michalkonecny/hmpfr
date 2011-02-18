@@ -19,23 +19,21 @@ import Data.Typeable(Typeable)
 
 import Data.Function(on)
     
-data RoundMode = Near | Zero | Up | Down | GMP_RND_MAX | GMP_RNDNA 
+data RoundMode = Near | Zero | Up | Down | MPFR_RNDNA 
                  deriving (Show, Read)
 
 instance Enum RoundMode where
-    fromEnum Near        = #{const GMP_RNDN} 
-    fromEnum Zero        = #{const GMP_RNDZ} 
-    fromEnum Up          = #{const GMP_RNDU} 
-    fromEnum Down        = #{const GMP_RNDD} 
-    fromEnum GMP_RND_MAX = #{const GMP_RND_MAX}
-    fromEnum GMP_RNDNA   = #{const GMP_RNDNA}
+    fromEnum Near        = #{const MPFR_RNDN} 
+    fromEnum Zero        = #{const MPFR_RNDZ} 
+    fromEnum Up          = #{const MPFR_RNDU} 
+    fromEnum Down        = #{const MPFR_RNDD} 
+    fromEnum MPFR_RNDNA   = #{const MPFR_RNDNA}
     
-    toEnum #{const GMP_RNDN}    = Near
-    toEnum #{const GMP_RNDZ}    = Zero
-    toEnum #{const GMP_RNDU}    = Up
-    toEnum #{const GMP_RNDD}    = Down
-    toEnum #{const GMP_RND_MAX} = GMP_RND_MAX
-    toEnum (#{const GMP_RNDNA}) = GMP_RNDNA
+    toEnum #{const MPFR_RNDN}    = Near
+    toEnum #{const MPFR_RNDZ}    = Zero
+    toEnum #{const MPFR_RNDU}    = Up
+    toEnum #{const MPFR_RNDD}    = Down
+    toEnum (#{const MPFR_RNDNA}) = MPFR_RNDNA
     toEnum i                    = error $ "RoundMode.toEnum called with illegal argument :" ++ show i 
 
 
@@ -145,6 +143,14 @@ type MpSize = #type mp_size_t
 -- utility functions from chsmpfr.h
 foreign import ccall unsafe "initS"
         initS :: CPrecision -> IO (Ptr MPFR)
+
+foreign import ccall unsafe "new_gmp_randstate"
+        new_gmp_randstate :: IO (Ptr GmpRandState)
+
+foreign import ccall unsafe "mpfr_urandomb_deref_randstate"
+        mpfr_urandomb_deref_randstate ::  (Ptr MPFR) -> (Ptr GmpRandState) -> IO Int
+
+type GmpRandState = ()
 
 --------------------
 foreign import ccall unsafe "mpfr_get_prec_wrap"
@@ -656,9 +662,8 @@ foreign import ccall unsafe "mpfr_min"
 foreign import ccall unsafe "mpfr_max"
         mpfr_max :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
-foreign import ccall unsafe "mpfr_random2"
-        mpfr_random2 :: Ptr MPFR -> MpSize -> Exp -> IO ()
-
+foreign import ccall unsafe "mpfr_urandomb"
+        mpfr_urandomb :: Ptr MPFR -> Ptr GmpRandState -> IO ()
 
 foreign import ccall unsafe "mpfr_get_exp_wrap"
         mpfr_get_exp :: Ptr MPFR -> IO Exp

@@ -163,7 +163,7 @@ mpfr_nextabove : nextAbove
 mpfr_nextbelow : nextBelow
 mpfr_min : maxD
 mpfr_max : minD
-mpfr_random2 : random2
+mpfr_urandomb : urandomb
 mpfr_get_exp : getExp
 mpfr_set_exp : setExp
 mpfr_signbit : signbit

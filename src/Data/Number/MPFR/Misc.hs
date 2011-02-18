@@ -68,13 +68,20 @@ maxD r p d1 = fst . maxD_ r p d1
 minD        :: RoundMode -> Precision -> MPFR -> MPFR -> MPFR
 minD r p d1 = fst . minD_ r p d1
 
-random2       :: Precision -> MpSize -> Exp -> IO MPFR
-random2 p m e = do ls <- mpfr_custom_get_size (fromIntegral p)
-                   fp <- mallocForeignPtrBytes (fromIntegral ls)
-                   alloca $ \p1 -> do
-                     pokeDummy p1 fp p
-                     mpfr_random2 p1 m e
-                     peekP p1 fp
+newRandomStatePointer :: Ptr GmpRandState
+newRandomStatePointer =
+    unsafePerformIO new_gmp_randstate
+
+urandomb :: Ptr GmpRandState -> Precision -> MPFR
+urandomb randStateP p =
+    fst $
+    unsafePerformIO $
+    do
+    withDummy p $ \dP ->
+        do
+        res <- mpfr_urandomb_deref_randstate dP randStateP
+        return $ fromIntegral res
+
 
 getExp              :: MPFR -> Exp
 getExp (MP _ _ e _) = e 
@@ -87,8 +94,8 @@ setExp d e = unsafePerformIO go
                   alloca $ \p1 -> do
                     pokeDummy p1 fp p
                     with d $ \p2 -> do 
-                      mpfr_set p1 p2 ((fromIntegral . fromEnum) Near)
-                      mpfr_set_exp p1 e
+                      _ <- mpfr_set p1 p2 ((fromIntegral . fromEnum) Near)
+                      _ <- mpfr_set_exp p1 e
                       peekP p1 fp
 
 signbit   :: MPFR -> Bool

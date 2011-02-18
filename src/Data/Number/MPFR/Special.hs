@@ -11,8 +11,6 @@
  For documentation on particular functions see
  <http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions>.
 -}
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
 
 module Data.Number.MPFR.Special where
 

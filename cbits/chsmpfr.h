@@ -6,6 +6,10 @@ mpfr_ptr initS(const mp_prec_t );
 
 void clear (const mpfr_ptr ) ;
 
+gmp_randstate_t * new_gmp_randstate();
+
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP));
+
 // these functions are defined as macros and so haskell ffi 
 // can't work with them directly
 
