@@ -1,12 +1,11 @@
 name:                hmpfr
-version:             0.3.1
-synopsis:            Haskell binding to MPFR library
-description:         Haskell binding to MPFR library. This version is compatible
-                     only with 2.4.* and will not work with previous releases
+version:             0.3.2
+synopsis:            Haskell binding to the MPFR library
+description:         Haskell binding to the MPFR library. This version is compatible
+                     with 3.* and later and will not work with previous releases
                      of the MPFR library.
                      .
-
-                     This is the first release that includes a mutable interface
+                     The library includes a mutable interface
                      in addition to the pure one. These functions should have a
                      lot less overhead than the pure ones.
                      .
@@ -15,10 +14,10 @@ category:            Data, Math
 license:             BSD3
 license-file:        LICENSE
 Stability:           experimental
-tested-with:         GHC == 6.10.4
-author:              Aleš Bizjak
-maintainer:          Aleš Bizjak <ales.bizjak0@gmail.com>
-Homepage:            http://code.haskell.org/hmpfr/
+tested-with:         GHC == 6.12.3
+author:              Aleš Bizjak, Michal Konečný
+maintainer:          Michal Konečný <mikkonecny@gmail.com>
+Homepage:            http://code.google.com/p/hmpfr/
 
 build-type:          Simple
 cabal-version:       >= 1.2
@@ -66,7 +65,7 @@ Library
   GHC-prof-options:    -prof -auto
   hs-source-dirs:      src
   include-dirs:        cbits
-  includes:            chsmpfr.h mpfr.h
+  includes:            mpfr.h
   install-includes:    chsmpfr.h
   c-sources:           cbits/chsmpfr.c
 
