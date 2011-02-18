@@ -53,8 +53,17 @@ e2 p n = let one = M.fromInt M.Near p 1
                               . flip (MM.divi acc' acc') M.Up) [1..n]
                        MM.unsafeFreeze acc
 
+testRandom =
+    do
+    let rsP = M.newRandomStatePointer
+    print $ M.urandomb rsP 1000
+    print $ M.urandomb rsP 1000
+    print $ M.urandomb rsP 1000
+    print $ M.urandomb rsP 1000
 
 main = do print $ s1 1000 1000
           print $ s6 1000 1000
           print $ e1 1000 1000
           print $ e2 1000 1000
+          testRandom
+          
