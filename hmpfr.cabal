@@ -2,8 +2,13 @@ name:                hmpfr
 version:             0.3.2
 synopsis:            Haskell binding to the MPFR library
 description:         Haskell binding to the MPFR library. This version is compatible
-                     with 3.* and later and will not work with previous releases
+                     with MPFR 2.4.* and later and will not work with previous releases
                      of the MPFR library.
+                     .
+                     *Since MPFR uses GMP, this library does work correctly
+                     with a ghc that has been compiled with integer-gmp.  
+                     When using ghc, this library will require that the ghc
+                     is compiled  with integer-simple.* 
                      .
                      The library includes a mutable interface
                      in addition to the pure one. These functions should have a
@@ -29,9 +34,7 @@ Data-files:          README
 
 Library
   build-Depends:       base > 3 && < 5
-  if impl(ghc >= 6.10) && impl(ghc < 6.12)
-     build-Depends:    base >= 4, integer
-  if impl(ghc >= 6.12)
+  if impl(ghc)
      build-Depends:    integer-simple
 
   Other-modules:       Data.Number.MPFR.FFIhelper
