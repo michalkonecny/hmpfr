@@ -6,7 +6,7 @@
     Copyright   :  (c) Aleš Bizjak
     License     :  BSD3
 
-    Maintainer  :  ales.bizjak0@gmail.com
+    Maintainer  :  mikkonecny@gmail.com
     Stability   :  experimental
     Portability :  non-portable
 

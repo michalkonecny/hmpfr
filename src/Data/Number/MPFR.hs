@@ -6,7 +6,7 @@
     Copyright   :  (c) Aleš Bizjak
     License     :  BSD3
 
-    Maintainer  :  ales.bizjak0@gmail.com
+    Maintainer  :  mikkonecny@gmail.com
     Stability   :  experimental
     Portability :  non-portable
 
@@ -70,9 +70,6 @@ This mimics the behaviour of built in Haskell 'Float' and 'Double'.
 If you need instances of numeric typeclasses import one of the 
 Data.Number.MPFR.Instances.* modules.
 -}
-
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
 
 module Data.Number.MPFR (
          RoundMode (Near, Up, Down, Zero),

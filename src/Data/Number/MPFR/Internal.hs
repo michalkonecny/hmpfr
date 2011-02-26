@@ -1,5 +1,3 @@
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
 {-# LANGUAGE BangPatterns #-}
 
 module Data.Number.MPFR.Internal (

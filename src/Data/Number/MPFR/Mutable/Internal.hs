@@ -1,6 +1,3 @@
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
 module Data.Number.MPFR.Mutable.Internal (
        module Data.Number.MPFR.FFIhelper,
        withMutableMPFRBA,

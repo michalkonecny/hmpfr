@@ -1,12 +1,10 @@
-{-# INCLUDE <mpfr.h> #-} 
-{-# INCLUDE <chsmpfr.h> #-} 
 {-|
     Module      :  Data.Number.MPFR.Mutable.Arithmetic
     Description :  Basic arithmetic functions
     Copyright   :  (c) Aleš Bizjak
     License     :  BSD3
 
-    Maintainer  :  ales.bizjak0@gmail.com
+    Maintainer  :  mikkonecny@gmail.com
     Stability   :  experimental
     Portability :  non-portable
 

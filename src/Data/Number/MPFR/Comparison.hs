@@ -4,7 +4,7 @@
     Copyright   :  (c) Aleš Bizjak
     License     :  BSD3
 
-    Maintainer  :  ales.bizjak0@gmail.com
+    Maintainer  :  mikkonecny@gmail.com
     Stability   :  experimental
     Portability :  non-portable
 
@@ -14,9 +14,6 @@
   For documentation on particular functions see
   <http://www.mpfr.org/mpfr-current/mpfr.html#Comparison-Functions>
 -}
-
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
 
 module Data.Number.MPFR.Comparison where
 

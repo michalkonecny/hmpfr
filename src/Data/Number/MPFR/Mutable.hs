@@ -4,7 +4,7 @@
     Copyright   :  (c) Aleš Bizjak
     License     :  BSD3
 
-    Maintainer  :  ales.bizjak0@gmail.com
+    Maintainer  :  mikkonecny@gmail.com
     Stability   :  experimental
     Portability :  non-portable
 
@@ -20,10 +20,6 @@ and immutable interface is possible with 'runST'. For example mutable interface
 could be used in inner loops or in local calculations with temporary variables,
 helping reduce allocation overhead of the pure interface.
 -}
-
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
 
 module Data.Number.MPFR.Mutable (
      MMPFR,
