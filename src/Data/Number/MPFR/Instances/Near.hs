@@ -30,6 +30,12 @@ import Data.Maybe
 
 import Data.Ratio
 
+-- #if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
+-- import GHC.Integer.Internals
+-- #elif __GLASGOW_HASKELL__ >= 612
+-- import GHC.Integer.GMP.Internals
+-- #endif
+
 -- import qualified GHC.Exts as E
 
 instance Num MPFR where

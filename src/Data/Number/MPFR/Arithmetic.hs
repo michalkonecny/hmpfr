@@ -12,9 +12,6 @@
  <http://www.mpfr.org/mpfr-current/mpfr.html#Basic-Arithmetic-Functions>.
 -}
 
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
 module Data.Number.MPFR.Arithmetic 
     where
 
@@ -245,11 +242,13 @@ wpow_           :: RoundMode -> Precision -> Word -> MPFR -> (MPFR , Int)
 wpow_ r p d1 d2 = withMPFRBAiu r p (fromIntegral d1) d2 mpfr_ui_pow
       
 neg_                       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
-neg_ r p mp1 = withMPFR r p mp1 mpfr_neg
+neg_ r p mp1@(MP p' s e fp) | p' == fromIntegral p && e /= expNaN = (MP p' (negate s) e fp, 0)
+                            | otherwise = withMPFR r p mp1 mpfr_neg
       
 absD_      :: RoundMode -> Precision -> MPFR -> (MPFR , Int)
-absD_ r p d = withMPFR r p d mpfr_abs
-
+absD_ r p d@(MP p' s e fp) | p' == fromIntegral p && e /= expNaN = (MP p' (abs s) e fp, 0)
+                           | otherwise                           = withMPFR r p d mpfr_abs
+      
 dim_           :: RoundMode -> Precision -> MPFR -> MPFR -> (MPFR, Int)
 dim_ r p d1 d2 = withMPFRsBA r p d1 d2 mpfr_dim
       
