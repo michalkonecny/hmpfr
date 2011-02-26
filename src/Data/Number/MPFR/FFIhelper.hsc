@@ -23,6 +23,19 @@ data RoundMode = Near | Zero | Up | Down | MPFR_RNDNA
                  deriving (Show, Read)
 
 instance Enum RoundMode where
+#if MPFR_VERSION_MAJOR == 2
+    fromEnum Near        = #{const GMP_RNDN} 
+    fromEnum Zero        = #{const GMP_RNDZ} 
+    fromEnum Up          = #{const GMP_RNDU} 
+    fromEnum Down        = #{const GMP_RNDD} 
+    fromEnum MPFR_RNDNA   = #{const GMP_RNDNA}
+    
+    toEnum #{const GMP_RNDN}    = Near
+    toEnum #{const GMP_RNDZ}    = Zero
+    toEnum #{const GMP_RNDU}    = Up
+    toEnum #{const GMP_RNDD}    = Down
+    toEnum (#{const GMP_RNDNA}) = MPFR_RNDNA
+#else
     fromEnum Near        = #{const MPFR_RNDN} 
     fromEnum Zero        = #{const MPFR_RNDZ} 
     fromEnum Up          = #{const MPFR_RNDU} 
@@ -34,6 +47,7 @@ instance Enum RoundMode where
     toEnum #{const MPFR_RNDU}    = Up
     toEnum #{const MPFR_RNDD}    = Down
     toEnum (#{const MPFR_RNDNA}) = MPFR_RNDNA
+#endif
     toEnum i                    = error $ "RoundMode.toEnum called with illegal argument :" ++ show i 
 
 
