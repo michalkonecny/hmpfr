@@ -66,4 +66,10 @@ main = do print $ s1 1000 1000
           print $ e1 1000 1000
           print $ e2 1000 1000
           testRandom
+          putStrLn $ "exp 1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 one)
+          putStrLn $ "exp -1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 (M.neg M.Up 100 one))
+          putStrLn $ "exp 1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 one)
+          putStrLn $ "exp -1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 (M.neg M.Up 100 one))
+    
+one = 1 :: M.MPFR
           

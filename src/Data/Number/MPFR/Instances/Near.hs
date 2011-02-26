@@ -1,4 +1,4 @@
-{-# LANGUAGE MagicHash, CPP #-}
+-- {-# LANGUAGE MagicHash, CPP #-}
 {-|
     Module      :  Data.Number.MPFR.Instances.Near
     Description :  Instance declarations
@@ -13,10 +13,6 @@
   Operations are rounded with 'RoundMode' 'Near' and computed with maximum precision of two 
   operands or with the precision of the operand.
 -}
-
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
 
 module Data.Number.MPFR.Instances.Near ()
 where
@@ -34,13 +30,7 @@ import Data.Maybe
 
 import Data.Ratio
 
-#if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
-import GHC.Integer.Internals
-#elif __GLASGOW_HASKELL__ >= 612
-import GHC.Integer.GMP.Internals
-#endif
-
-import qualified GHC.Exts as E
+-- import qualified GHC.Exts as E
 
 instance Num MPFR where
     d + d'        = A.add Near (maxPrec d d') d d'
@@ -49,8 +39,10 @@ instance Num MPFR where
     negate d      = A.neg Near (getPrec d) d
     abs d         = A.absD Near (getPrec d) d
     signum        = fromInt Near minPrec . fromMaybe (-1) . sgn
-    fromInteger (S# i) = fromInt Near minPrec (E.I# i)
-    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
+    fromInteger i = 
+        fromIntegerA Near (max minPrec $ 1 + bitsInInteger i) i
+--    fromInteger (S# i) = fromInt Zero minPrec (E.I# i)
+--    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
 
 instance Real MPFR where
     toRational d = n % 2 ^ e

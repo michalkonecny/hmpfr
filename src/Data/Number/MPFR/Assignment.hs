@@ -1,3 +1,4 @@
+{-# LANGUAGE MagicHash, CPP #-}
 {-|
     Module      :  Data.Number.MPFR.Assignment
     Description :  wrappers for assignment functions
@@ -13,15 +14,19 @@
  documentation on particular functions.
 -}
 
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
-
 module Data.Number.MPFR.Assignment where
 
 import Data.Number.MPFR.Internal
 
 import Data.Number.MPFR.Arithmetic
+
+import Foreign.Storable
+
+#if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
+#error "hmpfr can be compiled only with ghc 6.12 or newer with integer-simple" 
+#elif __GLASGOW_HASKELL__ >= 612
+import GHC.Integer.Simple.Internals
+#endif
 
 set     :: RoundMode -> Precision -> MPFR -> MPFR
 set r p = fst . set_ r p
@@ -130,6 +135,17 @@ setNaN p = unsafePerformIO go
 
 fromIntegerA     :: RoundMode -> Precision -> Integer -> MPFR
 fromIntegerA r p = stringToMPFR r p 10 . show 
+
+bitsInInteger :: (Num a) => Integer -> a
+bitsInInteger Naught = 0
+bitsInInteger (Positive pos) = bitsInPositive pos
+bitsInInteger (Negative pos) = bitsInPositive pos
+bitsInPositive :: (Num a) => Positive -> a
+bitsInPositive None = 0
+bitsInPositive (Some _ rest) = 
+    sizeofInt + (bitsInPositive rest)
+sizeofInt :: (Num a) => a 
+sizeofInt = fromIntegral $ sizeOf (0 :: Int)
 
 compose             :: RoundMode -> Precision -> (Integer, Int) -> MPFR 
 compose r p (i, ii) = div2i r p (fromIntegerA r p i) ii

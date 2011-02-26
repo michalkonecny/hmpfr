@@ -1,4 +1,4 @@
-{-# LANGUAGE MagicHash, CPP #-}
+-- {-# LANGUAGE MagicHash, CPP #-}
 
 {-|
     Module      :  Data.Number.MPFR.Instances.Up
@@ -14,10 +14,6 @@
   Operations are rounded with 'RoundMode' 'Up' and computed with maximum precision of two 
   operands or with the precision of the operand.
 -}
-
-{-# INCLUDE <mpfr.h> #-}
-{-# INCLUDE <chsmpfr.h> #-}
-
 
 module Data.Number.MPFR.Instances.Up ()
 where
@@ -35,13 +31,13 @@ import Data.Maybe
 
 import Data.Ratio
 
-#if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
-import GHC.Integer.Internals
-#elif __GLASGOW_HASKELL__ >= 612
-import GHC.Integer.GMP.Internals
-#endif
+-- #if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
+-- import GHC.Integer.Internals
+-- #elif __GLASGOW_HASKELL__ >= 612
+-- import GHC.Integer.GMP.Internals
+-- #endif
 
-import qualified GHC.Exts as E
+-- import qualified GHC.Exts as E
 
 instance Num MPFR where
     d + d'        = A.add Up (maxPrec d d') d d'
@@ -50,8 +46,10 @@ instance Num MPFR where
     negate d      = A.neg Up (getPrec d) d
     abs d         = A.absD Up (getPrec d) d
     signum        = fromInt Up minPrec . fromMaybe (-1) . sgn
-    fromInteger (S# i) = fromInt Up minPrec (E.I# i)
-    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
+    fromInteger i = 
+        fromIntegerA Up (max minPrec $ 1 + bitsInInteger i) i
+--    fromInteger (S# i) = fromInt Up minPrec (E.I# i)
+--    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
 
 instance Real MPFR where
     toRational d = n % 2 ^ e
