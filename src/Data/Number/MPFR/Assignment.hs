@@ -143,9 +143,9 @@ bitsInInteger (Negative pos) = bitsInPositive pos
 bitsInPositive :: (Num a) => Positive -> a
 bitsInPositive None = 0
 bitsInPositive (Some _ rest) = 
-    sizeofInt + (bitsInPositive rest)
+    (8 * sizeofInt) + (bitsInPositive rest)
 sizeofInt :: (Num a) => a 
-sizeofInt = fromIntegral $ sizeOf (0 :: Int)
+sizeofInt = fromIntegral $ sizeOf (0 :: Int) -- in bytes
 
 compose             :: RoundMode -> Precision -> (Integer, Int) -> MPFR 
 compose r p (i, ii) = div2i r p (fromIntegerA r p i) ii
