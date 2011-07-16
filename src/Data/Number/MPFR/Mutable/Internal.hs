@@ -29,7 +29,7 @@ import Foreign.ForeignPtr(withForeignPtr, mallocForeignPtrBytes)
 -- | A mutable MPFR. Currently this is just a newtype wrapped STRef to
 -- a MPFR but this may change in the future for a more efficient implementation.
 -- Type argument @s@ is the state variable argument for the @ST@ type.
-newtype MMPFR s = MMPFR { run :: STRef s MPFR }
+newtype MMPFR s = MMPFR { run :: STRef s MPFR } deriving Eq
 
 {-# INLINE unsafeWriteMMPFR #-}
 -- | Replace the state of the mutable MPFR with a new one. The actual limbs are
