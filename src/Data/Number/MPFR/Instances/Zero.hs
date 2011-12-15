@@ -1,4 +1,4 @@
--- {-# LANGUAGE MagicHash, CPP #-}
+{-# LANGUAGE MagicHash, CPP #-}
 {-|
     Module      :  Data.Number.MPFR.Instances.Zero
     Description :  Instance declarations
@@ -31,13 +31,13 @@ import Data.Maybe
 
 import Data.Ratio
 
--- #if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
--- import GHC.Integer.Internals
--- #elif __GLASGOW_HASKELL__ >= 612
--- import GHC.Integer.GMP.Internals
--- #endif
-
--- import qualified GHC.Exts as E
+#ifdef INTEGER_SIMPLE
+--import GHC.Integer.Simple.Internals
+#endif
+#ifdef INTEGER_GMP
+import GHC.Integer.GMP.Internals
+import qualified GHC.Exts as E
+#endif
 
 instance Num MPFR where
     d + d'        = A.add Zero (maxPrec d d') d d'
@@ -46,10 +46,14 @@ instance Num MPFR where
     negate d      = A.neg Zero (getPrec d) d
     abs d         = A.absD Zero (getPrec d) d
     signum        = fromInt Zero minPrec . fromMaybe (-1) . sgn
+#ifdef INTEGER_SIMPLE
     fromInteger i = 
         fromIntegerA Zero (max minPrec $ 1 + bitsInInteger i) i
---    fromInteger (S# i) = fromInt Zero minPrec (E.I# i)
---    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
+#endif
+#ifdef INTEGER_GMP
+    fromInteger (S# i) = fromInt Zero minPrec (E.I# i)
+    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
+#endif
 
 instance Real MPFR where
     toRational d = n % 2 ^ e

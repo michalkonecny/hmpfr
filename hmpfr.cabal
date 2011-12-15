@@ -1,14 +1,14 @@
 name:                hmpfr
-version:             0.3.2.1
+version:             0.3.3
 synopsis:            Haskell binding to the MPFR library
 description:         Haskell binding to the MPFR library. This version is compatible
                      with MPFR 2.4.* and later and will not work with previous releases
                      of the MPFR library.
                      .
                      /Since MPFR uses GMP, this library does not work correctly/
-                     /with a ghc that has been compiled with integer-gmp./  
-                     /When using ghc, this library will require that the ghc/
-                     /is compiled  with integer-simple./
+                     /with a ghc < TODO that has been compiled with integer-gmp./  
+                     /When using ghc < TODO, this library will require that the ghc/
+                     /is compiled  with integer-simple instead of integer-gmp./
                      .
                      The library includes a mutable interface
                      in addition to the pure one. These functions should have a
@@ -19,7 +19,7 @@ category:            Data, Math
 license:             BSD3
 license-file:        LICENSE
 Stability:           experimental
-tested-with:         GHC == 6.12.3
+tested-with:         GHC == 7.2.1-mygmp
 author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
 Homepage:            http://code.google.com/p/hmpfr/
@@ -34,8 +34,14 @@ Data-files:          README
 
 Library
   build-Depends:       base > 3 && < 5
-  if impl(ghc)
+  if impl(ghc < 7.2.1)
+--  if impl(ghc < 0)
+-- TODO: set the version above
      build-Depends:    integer-simple
+     cpp-options: -DINTEGER_SIMPLE
+  else
+     build-Depends:    integer-gmp
+     cpp-options: -DINTEGER_GMP
 
   Other-modules:       Data.Number.MPFR.FFIhelper
                        Data.Number.MPFR.Internal
