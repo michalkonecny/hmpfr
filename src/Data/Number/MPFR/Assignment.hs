@@ -28,6 +28,7 @@ import GHC.Integer.Simple.Internals
 
 #ifdef INTEGER_GMP
 --import GHC.Integer.GMP.Internals
+import GHC.Float
 #endif
 
 set     :: RoundMode -> Precision -> MPFR -> MPFR
@@ -138,8 +139,9 @@ setNaN p = unsafePerformIO go
 fromIntegerA     :: RoundMode -> Precision -> Integer -> MPFR
 fromIntegerA r p = stringToMPFR r p 10 . show 
 
-#ifdef INTEGER_SIMPLE
 bitsInInteger :: (Num a) => Integer -> a
+
+#  ifdef INTEGER_SIMPLE
 bitsInInteger Naught = 0
 bitsInInteger (Positive pos) = bitsInPositive pos
 bitsInInteger (Negative pos) = bitsInPositive pos
@@ -149,6 +151,8 @@ bitsInPositive (Some _ rest) =
     (8 * sizeofInt) + (bitsInPositive rest)
 sizeofInt :: (Num a) => a 
 sizeofInt = fromIntegral $ sizeOf (0 :: Int) -- in bytes
+#else
+bitsInInteger = fromIntegral . GHC.Float.integerLogBase 2
 #endif
 
 compose             :: RoundMode -> Precision -> (Integer, Int) -> MPFR 

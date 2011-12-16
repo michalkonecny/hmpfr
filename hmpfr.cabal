@@ -34,8 +34,8 @@ Data-files:          README
 
 Library
   build-Depends:       base > 3 && < 5
-  if impl(ghc < 7.2.1)
---  if impl(ghc < 0)
+--  if impl(ghc < 7.2.1)
+  if impl(ghc < 0)
 -- TODO: set the version above
      build-Depends:    integer-simple
      cpp-options: -DINTEGER_SIMPLE
