@@ -22,10 +22,13 @@ import Data.Number.MPFR.Arithmetic
 
 import Foreign.Storable
 
-#if (__GLASGOW_HASKELL__ >= 610) && (__GLASGOW_HASKELL__ < 612)
-#error "hmpfr can be compiled only with ghc 6.12 or newer with integer-simple" 
-#elif __GLASGOW_HASKELL__ >= 612
+#ifdef INTEGER_SIMPLE
 import GHC.Integer.Simple.Internals
+#endif
+
+#ifdef INTEGER_GMP
+--import GHC.Integer.GMP.Internals
+import GHC.Float
 #endif
 
 set     :: RoundMode -> Precision -> MPFR -> MPFR
@@ -137,6 +140,8 @@ fromIntegerA     :: RoundMode -> Precision -> Integer -> MPFR
 fromIntegerA r p = stringToMPFR r p 10 . show 
 
 bitsInInteger :: (Num a) => Integer -> a
+
+#  ifdef INTEGER_SIMPLE
 bitsInInteger Naught = 0
 bitsInInteger (Positive pos) = bitsInPositive pos
 bitsInInteger (Negative pos) = bitsInPositive pos
@@ -146,6 +151,9 @@ bitsInPositive (Some _ rest) =
     (8 * sizeofInt) + (bitsInPositive rest)
 sizeofInt :: (Num a) => a 
 sizeofInt = fromIntegral $ sizeOf (0 :: Int) -- in bytes
+#else
+bitsInInteger = fromIntegral . GHC.Float.integerLogBase 2
+#endif
 
 compose             :: RoundMode -> Precision -> (Integer, Int) -> MPFR 
 compose r p (i, ii) = div2i r p (fromIntegerA r p i) ii

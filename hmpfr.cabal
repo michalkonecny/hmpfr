@@ -1,25 +1,24 @@
 name:                hmpfr
-version:             0.3.2.1
+version:             0.3.3
 synopsis:            Haskell binding to the MPFR library
 description:         Haskell binding to the MPFR library. This version is compatible
                      with MPFR 2.4.* and later and will not work with previous releases
                      of the MPFR library.
                      .
-                     /Since MPFR uses GMP, this library does not work correctly/
-                     /with a ghc that has been compiled with integer-gmp./  
-                     /When using ghc, this library will require that the ghc/
-                     /is compiled  with integer-simple./
+                     /Since MPFR uses GMP, this library features infrequent but serious errors/
+                     /with a ghc (at least <= 7.2.1) that has been compiled with integer-gmp./  
+                     /When using ghc, it is recommended to use one compiled with integer-simple./
                      .
-                     The library includes a mutable interface
-                     in addition to the pure one. These functions should have a
-                     lot less overhead than the pure ones.
+                     The library includes both a pure and a mutable interface.
+                     The mutable interface should have a lot less overhead 
+                     than the pure one.
                      .
                      Some simple examples of usage can be found in demo/Demo.hs.
 category:            Data, Math
 license:             BSD3
 license-file:        LICENSE
 Stability:           experimental
-tested-with:         GHC == 6.12.3
+tested-with:         GHC == 6.12.3, GHC == 7.2.1
 author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
 Homepage:            http://code.google.com/p/hmpfr/
@@ -32,10 +31,18 @@ Data-files:          README
                      dict.txt
                      ChangeLog
 
+flag use-integer-simple
+  description: Use this when compiling using a ghc that uses integer-simple instead of integer-gmp.
+  default: False
+
 Library
   build-Depends:       base > 3 && < 5
-  if impl(ghc)
+  if flag(use-integer-simple)
      build-Depends:    integer-simple
+     cpp-options: -DINTEGER_SIMPLE
+  else
+     build-Depends:    integer-gmp
+     cpp-options: -DINTEGER_GMP
 
   Other-modules:       Data.Number.MPFR.FFIhelper
                        Data.Number.MPFR.Internal

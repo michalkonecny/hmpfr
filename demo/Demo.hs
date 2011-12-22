@@ -1,4 +1,4 @@
-module Demo where
+module Main where
 
 import qualified Data.Number.MPFR as M --import functions
 import Data.Number.MPFR.Instances.Up -- import instances
@@ -61,15 +61,14 @@ testRandom =
     print $ M.urandomb rsP 1000
     print $ M.urandomb rsP 1000
 
-main = do print $ s1 1000 1000
-          print $ s6 1000 1000
-          print $ e1 1000 1000
-          print $ e2 1000 1000
+main = do print $ s1 1000 100000
+          print $ s6 1000 100000
+          print $ e1 1000 100000
+          print $ e2 1000 100000
           testRandom
-          putStrLn $ "exp 1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 one)
-          putStrLn $ "exp -1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 (M.neg M.Up 100 one))
-          putStrLn $ "exp 1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 one)
-          putStrLn $ "exp -1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 (M.neg M.Up 100 one))
+          let c1 = one
+          putStrLn $ "exp 1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 c1)
+          putStrLn $ "exp -1 = " ++ (M.toStringExp 10000 $ M.exp M.Up 100 (M.neg M.Up 100 c1))
     
 one = 1 :: M.MPFR
           
