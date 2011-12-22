@@ -71,7 +71,7 @@ Library
                        Data.Number.MPFR.Mutable
                        
   build-tools:         hsc2hs
-  GHC-options:         -Wall -fno-warn-orphans -O2
+  GHC-options:         -Wall -fno-warn-orphans
   GHC-prof-options:    -prof -auto
   hs-source-dirs:      src
   include-dirs:        cbits
