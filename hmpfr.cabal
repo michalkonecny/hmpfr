@@ -22,6 +22,14 @@ tested-with:         GHC == 6.12.3, GHC == 7.2.1
 author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
 Homepage:            http://code.google.com/p/hmpfr/
+build-type:          Simple
+cabal-version:       >= 1.6
+Extra-source-files:  demo/Demo.hs
+
+Data-files:          README
+                     dict.txt
+                     ChangeLog
+
 source-repository head
   type:     mercurial
   location: https://code.google.com/p/hmpfr/
@@ -31,13 +39,6 @@ source-repository this
   location: https://code.google.com/p/hmpfr/
   tag:      0.3.3
 
-build-type:          Simple
-cabal-version:       >= 1.2
-Extra-source-files:  demo/Demo.hs
-
-Data-files:          README
-                     dict.txt
-                     ChangeLog
 
 flag use-integer-simple
   description: Use this when compiling using a ghc that uses integer-simple instead of integer-gmp.
