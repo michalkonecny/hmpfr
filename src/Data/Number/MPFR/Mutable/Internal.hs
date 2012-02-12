@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module Data.Number.MPFR.Mutable.Internal (
        module Data.Number.MPFR.FFIhelper,
        withMutableMPFRBA,
@@ -20,8 +21,12 @@ import Foreign(Ptr, with)
 
 import Data.STRef(STRef, readSTRef, writeSTRef, newSTRef)
 
-import Control.Monad.ST(ST, unsafeIOToST)
-
+#if (__GLASGOW_HASKELL__ >= 702)
+import Control.Monad.ST(ST)
+import Control.Monad.ST.Unsafe(unsafeIOToST)
+#else
+import Control.Monad.ST(ST,unsafeIOToST)
+#endif
 import Foreign.Marshal.Utils(copyBytes)
 
 import Foreign.ForeignPtr(withForeignPtr, mallocForeignPtrBytes)

@@ -38,6 +38,7 @@ cmp mp1@(MP _ s e _) mp2@(MP _ s' e' _)
     | isZero mp2             = Just . toEnum . (+ 1) . fromIntegral $ signum s
     | isInfinite mp1         = Just .compare s $ if isInfinite mp2 then s' else 0 
     | isInfinite mp2         = Just $ compare 0 s'
+    | otherwise              = Nothing
 
 cmpw       :: MPFR -> Word -> Maybe Ordering
 cmpw mp1 w = if isNaN mp1 then Nothing else Just (compare (unsafePerformIO go) 0)

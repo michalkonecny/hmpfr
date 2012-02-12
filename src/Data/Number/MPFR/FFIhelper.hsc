@@ -9,7 +9,11 @@ import Data.Word
 import Data.Int
 
 import Foreign.C.String(CString)
+#if (__GLASGOW_HASKELL__ >= 704)
+import Foreign.C.Types(CULong(..), CLong(..), CInt(..), CUInt(..), CDouble(..), CChar)
+#else
 import Foreign.C.Types(CULong, CLong, CInt, CUInt, CDouble, CChar)
+#endif
 import Foreign.Ptr(Ptr)
 import Foreign.Marshal(alloca)
 import Foreign.Storable

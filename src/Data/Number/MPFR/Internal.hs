@@ -16,8 +16,9 @@ import Data.Number.MPFR.FFIhelper
 
 import Foreign.C(CInt, CLong, CULong, CDouble, withCString, peekCString)
 import Foreign.Marshal(alloca, peekArray)
-import Foreign(unsafePerformIO, peek, Ptr, nullPtr, mallocForeignPtrBytes, with, withForeignPtr)
+import Foreign(peek, Ptr, nullPtr, mallocForeignPtrBytes, with, withForeignPtr)
 import Foreign.Storable(sizeOf)
+import System.IO.Unsafe(unsafePerformIO)
 
 import Data.Bits(shiftL)
 

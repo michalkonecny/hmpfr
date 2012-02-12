@@ -20,10 +20,9 @@ import Data.Number.MPFR.Internal
 
 import Data.Number.MPFR.Arithmetic
 
-import Foreign.Storable
-
 #ifdef INTEGER_SIMPLE
 import GHC.Integer.Simple.Internals
+import Foreign.Storable (sizeOf)
 #endif
 
 #ifdef INTEGER_GMP
