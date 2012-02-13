@@ -1,5 +1,5 @@
 name:                hmpfr
-version:             0.3.3.3
+version:             0.3.3.4
 synopsis:            Haskell binding to the MPFR library
 description:         Haskell binding to the MPFR library. This version is compatible
                      with MPFR 2.4.* and later and will not work with previous releases
@@ -8,8 +8,15 @@ description:         Haskell binding to the MPFR library. This version is compat
                      /Since MPFR uses GMP, this library features infrequent but serious errors/
                      /with a ghc that has been compiled with the default integer-gmp./  
                      /When using ghc, it is recommended to use one compiled with a modified integer-gmp,/
-                     /as described at http://code.google.com/p/hmpfr/wiki/GHCWithRenamedGMP, or/
-                     /with integer-simple, as described at http://code.google.com/p/hmpfr/wiki/GHCWithoutGMP./
+                     /as described at/ 
+                     .
+                     <http://code.google.com/p/hmpfr/wiki/GHCWithRenamedGMP>
+                     .
+                     /or/
+                     /with integer-simple, as described at/
+                     .
+                     <http://code.google.com/p/hmpfr/wiki/GHCWithoutGMP>
+                     .
                      /There is a hope that at some point future versions of ghc will not need any modification for/
                      /hmpfr to work with them correctly./
                      .
@@ -44,7 +51,7 @@ source-repository head
 source-repository this
   type:     mercurial
   location: https://code.google.com/p/hmpfr/
-  tag:      release-0.3.3.3
+  tag:      release-0.3.3.4
 
 
 flag use-integer-simple
