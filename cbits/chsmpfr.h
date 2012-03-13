@@ -1,5 +1,5 @@
 #include <mpfr.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <inttypes.h>
 
 mpfr_ptr initS(const mp_prec_t );
