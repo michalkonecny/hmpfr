@@ -9,7 +9,7 @@ description:
   than the pure one.
   .
   Some simple examples of usage can be found in demo/Demo.hs.
-  
+
 category:            Data, Math
 license:             BSD3
 license-file:        LICENSE
@@ -31,11 +31,6 @@ Data-files:
 source-repository head
   type:     git
   location: https://github.com/michalkonecny/hmpfr
-
--- source-repository this
---   type:     git
---   location: https://github.com/michalkonecny/hmpfr
-
 
 flag use-integer-simple
   description: Use this when compiling using a ghc that uses integer-simple instead of integer-gmp.
@@ -78,7 +73,6 @@ Library
 
   build-tools:         hsc2hs
   GHC-options:         -Wall -fno-warn-orphans
-  GHC-prof-options:    -prof -auto
   hs-source-dirs:      src
   include-dirs:        cbits
   includes:            mpfr.h
