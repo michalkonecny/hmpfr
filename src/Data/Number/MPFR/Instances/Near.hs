@@ -10,7 +10,7 @@
     Portability :  non-portable
 
   This module defines instances 'Num', 'Real', 'Fractional', 'Floating' and 'RealFrac' of 'MPFR'.
-  Operations are rounded with 'RoundMode' 'Near' and computed with maximum precision of two 
+  Operations are rounded with 'RoundMode' 'Near' and computed with maximum precision of two
   operands or with the precision of the operand.
 -}
 
@@ -30,13 +30,13 @@ import Data.Maybe
 
 import Data.Ratio
 
-#ifdef INTEGER_SIMPLE
---import GHC.Integer.Simple.Internals
-#endif
-#ifdef INTEGER_GMP
-import GHC.Integer.GMP.Internals
-import qualified GHC.Exts as E
-#endif
+-- #ifdef INTEGER_SIMPLE
+-- --import GHC.Integer.Simple.Internals
+-- #endif
+-- #ifdef INTEGER_GMP
+-- import GHC.Integer.GMP.Internals
+-- import qualified GHC.Exts as E
+-- #endif
 
 instance Num MPFR where
     d + d'        = A.add Near (maxPrec d d') d d'
@@ -45,14 +45,14 @@ instance Num MPFR where
     negate d      = A.neg Near (getPrec d) d
     abs d         = A.absD Near (getPrec d) d
     signum        = fromInt Near minPrec . fromMaybe (-1) . sgn
-#ifdef INTEGER_SIMPLE
-    fromInteger i = 
+-- #ifdef INTEGER_SIMPLE
+    fromInteger i =
         fromIntegerA Near (max minPrec $ 1 + bitsInInteger i) i
-#endif
-#ifdef INTEGER_GMP
-    fromInteger (S# i) = fromInt Near minPrec (E.I# i)
-    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
-#endif
+-- #endif
+-- #ifdef INTEGER_GMP
+--     fromInteger (S# i) = fromInt Near minPrec (E.I# i)
+--     fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i
+-- #endif
 
 instance Real MPFR where
     toRational d = n % 2 ^ e
@@ -71,7 +71,7 @@ instance Floating MPFR where
     pi           = S.pi Near 53
     exp d        = S.exp Near (getPrec d) d
     log d        = S.log Near (getPrec d) d
-    sqrt d       = A.sqrt Near (getPrec d) d 
+    sqrt d       = A.sqrt Near (getPrec d) d
     (**) d d'    = A.pow Near (maxPrec d d') d d'
     logBase d d' = Prelude.log d' / Prelude.log d
     sin d        = S.sin Near (getPrec d) d

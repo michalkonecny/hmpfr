@@ -1,57 +1,40 @@
 name:                hmpfr
-version:             0.3.3.5
+version:             0.4.0
 synopsis:            Haskell binding to the MPFR library
-description:         Haskell binding to the MPFR library. This version is compatible
-                     with MPFR 2.4.* and later and will not work with previous releases
-                     of the MPFR library.
-                     .
-                     /Since MPFR uses GMP, this library features infrequent but serious errors/
-                     /with a ghc that has been compiled with the default integer-gmp./  
-                     /When using ghc, it is recommended to use one compiled with a modified integer-gmp,/
-                     /as described at/ 
-                     .
-                     <http://code.google.com/p/hmpfr/wiki/GHCWithRenamedGMP>
-                     .
-                     /or/
-                     /with integer-simple, as described at/
-                     .
-                     <http://code.google.com/p/hmpfr/wiki/GHCWithoutGMP>
-                     .
-                     /There is a hope that at some point future versions of ghc will not need any modification for/
-                     /hmpfr to work with them correctly./
-                     .
-                     The library includes both a pure and a mutable interface.
-                     The mutable interface should have a lot less overhead 
-                     than the pure one.
-                     .
-                     Some simple examples of usage can be found in demo/Demo.hs.
+description:
+  Haskell binding to the MPFR library.
+  .
+  The library includes both a pure and a mutable interface.
+  The mutable interface should have a lot less overhead
+  than the pure one.
+  .
+  Some simple examples of usage can be found in demo/Demo.hs.
+  
 category:            Data, Math
 license:             BSD3
 license-file:        LICENSE
 Stability:           experimental
 Tested-with:
-                GHC==6.12.3,
-                GHC==7.2.2,
-                GHC==7.4.1
+                GHC==7.10.3
 author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
-Homepage:            http://code.google.com/p/hmpfr/
+Homepage:            https://github.com/michalkonecny/hmpfr
 build-type:          Simple
 cabal-version:       >= 1.6
 Extra-source-files:  demo/Demo.hs
 
-Data-files:          README
-                     dict.txt
-                     ChangeLog
+Data-files:
+  README.md
+  dict.txt
+  ChangeLog
 
 source-repository head
-  type:     mercurial
-  location: https://code.google.com/p/hmpfr/
+  type:     git
+  location: https://github.com/michalkonecny/hmpfr
 
-source-repository this
-  type:     mercurial
-  location: https://code.google.com/p/hmpfr/
-  tag:      release-0.3.3.5
+-- source-repository this
+--   type:     git
+--   location: https://github.com/michalkonecny/hmpfr
 
 
 flag use-integer-simple
@@ -59,12 +42,12 @@ flag use-integer-simple
   default: False
 
 Library
-  build-Depends:       base > 3 && < 5
+  build-Depends:       base >= 4.8 && < 5
   if flag(use-integer-simple)
      build-Depends:    integer-simple
      cpp-options: -DINTEGER_SIMPLE
   else
-     build-Depends:    integer-gmp
+     build-Depends:    integer-gmp >= 1.0 && < 1.1
      cpp-options: -DINTEGER_GMP
 
   Other-modules:       Data.Number.MPFR.FFIhelper
@@ -75,7 +58,7 @@ Library
                        Data.Number.MPFR.Mutable.Special
                        Data.Number.MPFR.Mutable.Integer
                        Data.Number.MPFR.Mutable.Misc
-                       
+
                        Data.Number.MPFR.Assignment
                        Data.Number.MPFR.Conversion
                        Data.Number.MPFR.Arithmetic
@@ -92,7 +75,7 @@ Library
                        Data.Number.MPFR
 
                        Data.Number.MPFR.Mutable
-                       
+
   build-tools:         hsc2hs
   GHC-options:         -Wall -fno-warn-orphans
   GHC-prof-options:    -prof -auto
@@ -103,4 +86,3 @@ Library
   c-sources:           cbits/chsmpfr.c
 
   extra-libraries:     mpfr
-

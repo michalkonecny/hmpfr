@@ -11,7 +11,7 @@
     Portability :  non-portable
 
   This module defines instances 'Num', 'Real', 'Fractional', 'Floating' and 'RealFrac' of 'MPFR'.
-  Operations are rounded with 'RoundMode' 'Up' and computed with maximum precision of two 
+  Operations are rounded with 'RoundMode' 'Up' and computed with maximum precision of two
   operands or with the precision of the operand.
 -}
 
@@ -31,13 +31,13 @@ import Data.Maybe
 
 import Data.Ratio
 
-#ifdef INTEGER_SIMPLE
---import GHC.Integer.Simple.Internals
-#endif
-#ifdef INTEGER_GMP
-import GHC.Integer.GMP.Internals
-import qualified GHC.Exts as E
-#endif
+-- #ifdef INTEGER_SIMPLE
+-- --import GHC.Integer.Simple.Internals
+-- #endif
+-- #ifdef INTEGER_GMP
+-- import GHC.Integer.GMP.Internals
+-- import qualified GHC.Exts as E
+-- #endif
 
 
 instance Num MPFR where
@@ -47,14 +47,14 @@ instance Num MPFR where
     negate d      = A.neg Up (getPrec d) d
     abs d         = A.absD Up (getPrec d) d
     signum        = fromInt Up minPrec . fromMaybe (-1) . sgn
-#ifdef INTEGER_SIMPLE
-    fromInteger i = 
+-- #ifdef INTEGER_SIMPLE
+    fromInteger i =
         fromIntegerA Up (max minPrec $ 1 + bitsInInteger i) i
-#endif
-#ifdef INTEGER_GMP
-    fromInteger (S# i) = fromInt Up minPrec (E.I# i)
-    fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i 
-#endif
+-- #endif
+-- #ifdef INTEGER_GMP
+--     fromInteger (S# i) = fromInt Up minPrec (E.I# i)
+--     fromInteger i@(J# n _) = fromIntegerA Zero (fromIntegral . abs $ E.I# n * bitsPerIntegerLimb) i
+-- #endif
 
 instance Real MPFR where
     toRational d = n % 2 ^ e
@@ -73,7 +73,7 @@ instance Floating MPFR where
     pi           = S.pi Up 53
     exp d        = S.exp Up (getPrec d) d
     log d        = S.log Up (getPrec d) d
-    sqrt d       = A.sqrt Up (getPrec d) d 
+    sqrt d       = A.sqrt Up (getPrec d) d
     (**) d d'    = A.pow Up (maxPrec d d') d d'
     logBase d d' = Prelude.log d' / Prelude.log d
     sin d        = S.sin Up (getPrec d) d
