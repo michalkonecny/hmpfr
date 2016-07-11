@@ -45,9 +45,11 @@ instance Num MPFR where
     negate d      = A.neg Near (getPrec d) d
     abs d         = A.absD Near (getPrec d) d
     signum        = fromInt Near minPrec . fromMaybe (-1) . sgn
--- #ifdef INTEGER_SIMPLE
     fromInteger i =
         fromIntegerA Near (max minPrec $ 1 + bitsInInteger i) i
+-- #ifdef INTEGER_SIMPLE
+--     fromInteger i =
+--         fromIntegerA Near (max minPrec $ 1 + bitsInInteger i) i
 -- #endif
 -- #ifdef INTEGER_GMP
 --     fromInteger (S# i) = fromInt Near minPrec (E.I# i)
