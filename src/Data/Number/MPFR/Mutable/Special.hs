@@ -18,7 +18,7 @@ import Data.Number.MPFR.Mutable.Internal
 
 import Control.Monad.ST(ST)
 
-import Data.Word(Word)
+-- import Data.Word(Word)
 
 log :: MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 log = withMutableMPFRS mpfr_log
@@ -124,7 +124,7 @@ lngamma = withMutableMPFRS mpfr_lngamma
 
 {- TODO
 lgamma       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
-lgamma r p d = case lgamma_ r p d of 
+lgamma r p d = case lgamma_ r p d of
                  (a, b, _) -> (a,b)
 -}
 

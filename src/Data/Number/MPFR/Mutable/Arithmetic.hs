@@ -20,7 +20,7 @@ import Prelude hiding(isNaN)
 
 import Control.Monad.ST(ST)
 
-import Data.Word(Word)
+-- import Data.Word(Word)
 
 add :: MMPFR s -> MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 add = withMutableMPFRBA mpfr_add
@@ -65,11 +65,11 @@ muli :: MMPFR s -> MMPFR s -> Int -> RoundMode -> ST s Int
 muli = withMutableMPFR1 mpfr_mul_si
 
 muld :: MMPFR s -> MMPFR s -> Double -> RoundMode -> ST s Int
-muld = withMutableMPFRd mpfr_mul_d 
-     
+muld = withMutableMPFRd mpfr_mul_d
+
 sqr ::  MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 sqr = withMutableMPFRS mpfr_sqr
-      
+
 div :: MMPFR s -> MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 div = withMutableMPFRBA mpfr_div
 
@@ -93,19 +93,19 @@ ddiv = withMutableMPFRd' mpfr_d_div
 
 sqrt ::  MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 sqrt = withMutableMPFRS mpfr_sqrt
-      
+
 sqrtw :: MMPFR s -> Word -> RoundMode -> ST s Int
 sqrtw = withMutableMPFRUI mpfr_sqrt_ui
 
 recSqrt ::  MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 recSqrt = withMutableMPFRS mpfr_rec_sqrt
- 
+
 cbrt ::  MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 cbrt = withMutableMPFRS mpfr_cbrt
-      
+
 root :: MMPFR s -> MMPFR s -> Word -> RoundMode -> ST s Int
 root = withMutableMPFR1 mpfr_root
-      
+
 pow :: MMPFR s -> MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 pow = withMutableMPFRBA mpfr_pow
 
@@ -118,9 +118,9 @@ powi = withMutableMPFR1 mpfr_pow_si
 wpow :: MMPFR s -> Word -> MMPFR s -> RoundMode -> ST s Int
 wpow = withMutableMPFR2 mpfr_ui_pow
 
---wpoww       :: RoundMode -> Precision -> Word -> Word -> MPFR 
+--wpoww       :: RoundMode -> Precision -> Word -> Word -> MPFR
 --wpoww r p d = fst . wpoww_ r p d
-   
+
 neg ::  MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 neg = withMutableMPFRS mpfr_neg
 
@@ -141,4 +141,3 @@ div2w = withMutableMPFR1 mpfr_div_2ui
 
 div2i :: MMPFR s -> MMPFR s -> Int -> RoundMode -> ST s Int
 div2i = withMutableMPFR1 mpfr_div_2si
-      
