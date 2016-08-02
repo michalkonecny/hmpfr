@@ -128,6 +128,9 @@ lgamma r p d = case lgamma_ r p d of
                  (a, b, _) -> (a,b)
 -}
 
+digamma :: MMPFR s -> MMPFR s -> RoundMode -> ST s Int
+digamma = withMutableMPFRS mpfr_digamma
+
 zeta :: MMPFR s -> MMPFR s -> RoundMode -> ST s Int
 zeta = withMutableMPFRS mpfr_zeta
 
