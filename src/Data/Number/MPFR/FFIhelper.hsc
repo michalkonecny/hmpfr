@@ -22,37 +22,37 @@ import Foreign.ForeignPtr (ForeignPtr, withForeignPtr, mallocForeignPtrBytes)
 import Data.Typeable(Typeable)
 
 import Data.Function(on)
-    
-data RoundMode = Near | Zero | Up | Down | MPFR_RNDNA 
+
+data RoundMode = Near | Zero | Up | Down | MPFR_RNDNA
                  deriving (Show, Read)
 
 instance Enum RoundMode where
 #if MPFR_VERSION_MAJOR == 2
-    fromEnum Near        = #{const GMP_RNDN} 
-    fromEnum Zero        = #{const GMP_RNDZ} 
-    fromEnum Up          = #{const GMP_RNDU} 
-    fromEnum Down        = #{const GMP_RNDD} 
+    fromEnum Near        = #{const GMP_RNDN}
+    fromEnum Zero        = #{const GMP_RNDZ}
+    fromEnum Up          = #{const GMP_RNDU}
+    fromEnum Down        = #{const GMP_RNDD}
     fromEnum MPFR_RNDNA   = #{const GMP_RNDNA}
-    
+
     toEnum #{const GMP_RNDN}    = Near
     toEnum #{const GMP_RNDZ}    = Zero
     toEnum #{const GMP_RNDU}    = Up
     toEnum #{const GMP_RNDD}    = Down
     toEnum (#{const GMP_RNDNA}) = MPFR_RNDNA
 #else
-    fromEnum Near        = #{const MPFR_RNDN} 
-    fromEnum Zero        = #{const MPFR_RNDZ} 
-    fromEnum Up          = #{const MPFR_RNDU} 
-    fromEnum Down        = #{const MPFR_RNDD} 
+    fromEnum Near        = #{const MPFR_RNDN}
+    fromEnum Zero        = #{const MPFR_RNDZ}
+    fromEnum Up          = #{const MPFR_RNDU}
+    fromEnum Down        = #{const MPFR_RNDD}
     fromEnum MPFR_RNDNA   = #{const MPFR_RNDNA}
-    
+
     toEnum #{const MPFR_RNDN}    = Near
     toEnum #{const MPFR_RNDZ}    = Zero
     toEnum #{const MPFR_RNDU}    = Up
     toEnum #{const MPFR_RNDD}    = Down
     toEnum (#{const MPFR_RNDNA}) = MPFR_RNDNA
 #endif
-    toEnum i                    = error $ "RoundMode.toEnum called with illegal argument :" ++ show i 
+    toEnum i                    = error $ "RoundMode.toEnum called with illegal argument :" ++ show i
 
 
 data MPFR = MP { precision :: {-# UNPACK #-} !CPrecision,
@@ -66,7 +66,7 @@ instance Storable MPFR where
     alignment _ = alignment (undefined :: #{type mpfr_prec_t})
     peek = error "MPFR.peek: Not needed and not applicable"
     poke p (MP prec s e fp) = do #{poke __mpfr_struct, _mpfr_prec} p prec
-                                 #{poke __mpfr_struct, _mpfr_sign} p s 
+                                 #{poke __mpfr_struct, _mpfr_sign} p s
                                  #{poke __mpfr_struct, _mpfr_exp} p e
                                  withForeignPtr fp $ \p1 -> #{poke __mpfr_struct, _mpfr_d} p p1
 
@@ -75,16 +75,16 @@ newtype Precision = Precision { runPrec :: Word } deriving (Eq, Ord, Show, Enum)
 instance Num Precision where
     (Precision w) + (Precision w') = Precision $ w + w'
     (Precision w) * (Precision w') = Precision $ w * w'
-    (Precision a) - (Precision b) = 
-        if a >= b 
-        then Precision (a - b) 
-        else error $ "instance Precision Num (-): " ++ 
+    (Precision a) - (Precision b) =
+        if a >= b
+        then Precision (a - b)
+        else error $ "instance Precision Num (-): " ++
                        "Operation would result in negative precision."
-    negate = error $ "instance Precision Num negate: " ++ 
+    negate = error $ "instance Precision Num negate: " ++
                        "operation would result in negative precision"
     abs = id
     signum (Precision x) = Precision . signum $ x
-    fromInteger i = if i >= 0 
+    fromInteger i = if i >= 0
                     then Precision . fromInteger $ i
                     else error $ "instance Precision Num fromInteger: " ++
                              "operation would result  in negative precision"
@@ -100,7 +100,7 @@ instance Integral Precision where
 peekNoLimbPrec      :: Ptr MPFR -> IO (Sign, Exp)
 peekNoLimbPrec p = do r21 <- #{peek __mpfr_struct, _mpfr_sign} p
                       r22 <- #{peek __mpfr_struct, _mpfr_exp} p
-                      return (r21, r22)            
+                      return (r21, r22)
 
 
 {-# INLINE peekP #-}
@@ -111,12 +111,12 @@ peekP p fp = do r11 <- #{peek __mpfr_struct, _mpfr_prec} p
                 return (MP r11 r21 r22 fp)
 {-# INLINE withDummy #-}
 withDummy     :: Precision -> (Ptr MPFR -> IO CInt) -> IO (MPFR, Int)
-withDummy w f = 
+withDummy w f =
     do alloca $ \ptr -> do
                       ls <- mpfr_custom_get_size (fromIntegral . runPrec $ w)
                       fp <- mallocForeignPtrBytes (fromIntegral ls)
                       #{poke __mpfr_struct, _mpfr_prec} ptr (fromIntegral w :: CPrecision)
-                      #{poke __mpfr_struct, _mpfr_sign} ptr (1 :: Sign) 
+                      #{poke __mpfr_struct, _mpfr_sign} ptr (1 :: Sign)
                       #{poke __mpfr_struct, _mpfr_exp} ptr (0 :: Exp)
                       withForeignPtr fp $ \p1 -> #{poke __mpfr_struct, _mpfr_d} ptr p1
                       r2 <- f ptr
@@ -126,11 +126,11 @@ withDummy w f =
 {-# INLINE pokeDummy #-}
 pokeDummy          :: Ptr MPFR -> ForeignPtr Limb -> Precision -> IO ()
 pokeDummy ptr fp p = do #{poke __mpfr_struct, _mpfr_prec} ptr ((fromIntegral . runPrec $ p) :: CPrecision)
-                        #{poke __mpfr_struct, _mpfr_sign} ptr (0 :: Sign) 
+                        #{poke __mpfr_struct, _mpfr_sign} ptr (0 :: Sign)
                         #{poke __mpfr_struct, _mpfr_exp} ptr (0 :: Exp)
                         withForeignPtr fp $ \p1 -> #{poke __mpfr_struct, _mpfr_d} ptr p1
 
-bitsPerMPLimb :: Int 
+bitsPerMPLimb :: Int
 bitsPerMPLimb = 8 * #size mp_limb_t
 
 bitsPerIntegerLimb :: Int
@@ -172,7 +172,7 @@ type GmpRandState = ()
 
 --------------------
 foreign import ccall unsafe "mpfr_get_prec_wrap"
-        mpfr_get_prec :: Ptr MPFR -> IO CPrecision 
+        mpfr_get_prec :: Ptr MPFR -> IO CPrecision
 
 ----------------------------------------------------------------
 
@@ -222,10 +222,10 @@ foreign import ccall unsafe "mpfr_get_d_2exp"
         mpfr_get_d_2exp :: Ptr CLong -> Ptr MPFR -> CRoundMode -> IO CDouble
 
 -- !!!!!!! next 4 set erange flags
-foreign import ccall unsafe "mpfr_get_si" 
+foreign import ccall unsafe "mpfr_get_si"
         mpfr_get_si :: Ptr MPFR -> CRoundMode -> IO CLong
 
-foreign import ccall unsafe "mpfr_get_ui" 
+foreign import ccall unsafe "mpfr_get_ui"
         mpfr_get_ui :: Ptr MPFR -> CRoundMode -> IO CULong
 
 foreign import ccall unsafe "mpfr_get_str"
@@ -278,13 +278,13 @@ foreign import ccall unsafe "mpfr_add_d"
 foreign import ccall unsafe "mpfr_sub"
         mpfr_sub :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
-foreign import ccall unsafe "mpfr_ui_sub" 
+foreign import ccall unsafe "mpfr_ui_sub"
         mpfr_ui_sub :: Ptr MPFR -> CULong -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_sub_ui"
         mpfr_sub_ui :: Ptr MPFR -> Ptr MPFR -> CULong -> CRoundMode -> IO CInt
 
-foreign import ccall unsafe "mpfr_si_sub" 
+foreign import ccall unsafe "mpfr_si_sub"
         mpfr_si_sub :: Ptr MPFR -> CLong -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_sub_si"
@@ -297,7 +297,7 @@ foreign import ccall unsafe "mpfr_d_sub"
         mpfr_d_sub :: Ptr MPFR -> CDouble -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_mul"
-        mpfr_mul :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt 
+        mpfr_mul :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_mul_ui"
         mpfr_mul_ui :: Ptr MPFR -> Ptr MPFR -> CULong -> CRoundMode -> IO CInt
@@ -345,10 +345,10 @@ foreign import ccall unsafe "mpfr_cbrt"
         mpfr_cbrt :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_root"
-        mpfr_root :: Ptr MPFR -> Ptr MPFR -> CULong -> CRoundMode -> IO CInt 
+        mpfr_root :: Ptr MPFR -> Ptr MPFR -> CULong -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_pow"
-        mpfr_pow :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt 
+        mpfr_pow :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_pow_ui"
         mpfr_pow_ui :: Ptr MPFR -> Ptr MPFR -> CULong -> CRoundMode -> IO CInt
@@ -363,10 +363,10 @@ foreign import ccall unsafe "mpfr_ui_pow"
         mpfr_ui_pow :: Ptr MPFR -> CULong -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_neg"
-        mpfr_neg :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt 
+        mpfr_neg :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_abs_wrap"
-        mpfr_abs :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt 
+        mpfr_abs :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_dim"
         mpfr_dim :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
@@ -422,30 +422,30 @@ foreign import ccall unsafe "mpfr_zero_p_wrap"
         mpfr_zero_p :: Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_sgn_wrap"
-        mpfr_sgn :: Ptr MPFR -> IO CInt 
+        mpfr_sgn :: Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_greater_p"
         mpfr_greater_p :: Ptr MPFR ->  Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_greaterequal_p"
-        mpfr_greaterequal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_greaterequal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_less_p"
-        mpfr_less_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_less_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_lessequal_p"
-        mpfr_lessequal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_lessequal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_lessgreater_p"
-        mpfr_lessgreater_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_lessgreater_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_equal_p"
-        mpfr_equal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_equal_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
 foreign import ccall unsafe "mpfr_unordered_p"
-        mpfr_unordered_p :: Ptr MPFR -> Ptr MPFR -> IO CInt 
+        mpfr_unordered_p :: Ptr MPFR -> Ptr MPFR -> IO CInt
 
--- special functions 
+-- special functions
 
 foreign import ccall unsafe "mpfr_log"
         mpfr_log :: Ptr MPFR -> Ptr MPFR ->  CRoundMode -> IO CInt
@@ -552,6 +552,9 @@ foreign import ccall unsafe "mpfr_lngamma"
 foreign import ccall unsafe "mpfr_lgamma"
         mpfr_lgamma :: Ptr MPFR -> Ptr CInt -> Ptr MPFR ->  CRoundMode -> IO CInt
 
+foreign import ccall unsafe "mpfr_digamma"
+        mpfr_digamma :: Ptr MPFR -> Ptr MPFR ->  CRoundMode -> IO CInt
+
 foreign import ccall unsafe "mpfr_zeta"
         mpfr_zeta :: Ptr MPFR -> Ptr MPFR ->  CRoundMode -> IO CInt
 
@@ -583,16 +586,16 @@ foreign import ccall unsafe "mpfr_yn"
         mpfr_yn :: Ptr MPFR -> CLong -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_fma"
-        mpfr_fma :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt  
+        mpfr_fma :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_fms"
         mpfr_fms :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_agm"
-        mpfr_agm :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt  
+        mpfr_agm :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_hypot"
-        mpfr_hypot :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt  
+        mpfr_hypot :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 -- constants
 foreign import ccall unsafe "mpfr_const_log2_wrap"
@@ -631,7 +634,7 @@ foreign import ccall unsafe "mpfr_round_wrap"
 
 foreign import ccall unsafe "mpfr_trunc_wrap"
         mpfr_trunc :: Ptr MPFR -> Ptr MPFR -> IO CInt
- 
+
 foreign import ccall unsafe "mpfr_rint_ceil"
         mpfr_rint_ceil :: Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
@@ -653,10 +656,10 @@ foreign import ccall unsafe "mpfr_modf"
 foreign import ccall unsafe "mpfr_fmod"
         mpfr_fmod :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
-foreign import ccall unsafe "mpfr_remainder" 
+foreign import ccall unsafe "mpfr_remainder"
         mpfr_remainder :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
-foreign import ccall unsafe "mpfr_remquo" 
+foreign import ccall unsafe "mpfr_remquo"
         mpfr_remquo :: Ptr MPFR -> Ptr CLong -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_integer_p"
@@ -696,7 +699,7 @@ foreign import ccall unsafe "mpfr_setsign_wrap"
         mpfr_setsign :: Ptr MPFR -> Ptr MPFR -> CInt -> CRoundMode -> IO CInt
 
 foreign import ccall unsafe "mpfr_copysign_wrap"
-        mpfr_copysign :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt 
+        mpfr_copysign :: Ptr MPFR -> Ptr MPFR -> Ptr MPFR -> CRoundMode -> IO CInt
 
 ---------------------------------------------------------------
 -- rounding mode related functions
@@ -781,7 +784,7 @@ foreign import ccall unsafe "mpfr_erangeflag_p"
 
 ---------------------------------------------------------------
 -- custom interface
-foreign import ccall unsafe "mpfr_custom_get_size_wrap" 
+foreign import ccall unsafe "mpfr_custom_get_size_wrap"
         mpfr_custom_get_size :: CPrecision -> IO #{type size_t}
 
 foreign import ccall unsafe "mpfr_custom_init_wrap"

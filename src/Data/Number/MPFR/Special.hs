@@ -54,7 +54,7 @@ cot r p = fst . cot_ r p
 
 sincos          :: RoundMode
                 -> Precision -- ^ precision to compute sin
-                -> Precision -- ^ precision to compute cos 
+                -> Precision -- ^ precision to compute cos
                 -> MPFR
                 -> (MPFR, MPFR) -- ^ return (sin x, cos x)
 sincos r p p' d = case sincos_ r p p' d of
@@ -83,7 +83,7 @@ tanh r p = fst . tanh_ r p
 
 sinhcosh          :: RoundMode
                   -> Precision -- ^ precision to compute sin
-                  -> Precision -- ^ precision to compute cos 
+                  -> Precision -- ^ precision to compute cos
                   -> MPFR
                   -> (MPFR, MPFR) -- ^ return (sin x, cos x)
 sinhcosh r p p' d = case sinhcosh_ r p p' d of
@@ -129,8 +129,11 @@ lngamma     :: RoundMode -> Precision -> MPFR -> MPFR
 lngamma r p = fst . lngamma_ r p
 
 lgamma       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
-lgamma r p d = case lgamma_ r p d of 
+lgamma r p d = case lgamma_ r p d of
                  (a, b, _) -> (a,b)
+
+digamma     :: RoundMode -> Precision -> MPFR -> MPFR
+digamma r p = fst . digamma_ r p
 
 zeta     :: RoundMode -> Precision -> MPFR -> MPFR
 zeta r p = fst . zeta_ r p
@@ -226,17 +229,17 @@ cot_ r p d = withMPFR r p d mpfr_cot
 
 sincos_ :: RoundMode
          -> Precision -- ^ precision to compute sin
-         -> Precision -- ^ precision to compute cos 
+         -> Precision -- ^ precision to compute cos
          -> MPFR
          -> (MPFR, MPFR, Int)
-sincos_ r p p' d = unsafePerformIO go 
+sincos_ r p p' d = unsafePerformIO go
     where go = do ls <- mpfr_custom_get_size (fromIntegral p)
                   fp <- mallocForeignPtrBytes (fromIntegral ls)
                   ls' <- mpfr_custom_get_size (fromIntegral p')
                   fp' <- mallocForeignPtrBytes (fromIntegral ls')
-                  alloca $ \p1 -> do 
+                  alloca $ \p1 -> do
                     pokeDummy p1 fp (fromIntegral ls)
-                    alloca $ \p2 -> do 
+                    alloca $ \p2 -> do
                       pokeDummy p2 fp' (fromIntegral ls')
                       with d $ \p3 -> do
                         r3 <- mpfr_sin_cos p1 p2 p3 ((fromIntegral . fromEnum) r)
@@ -254,7 +257,7 @@ atan_       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
 atan_ r p d = withMPFR r p d mpfr_atan
 
 atan2_ :: RoundMode -> Precision -> MPFR -> MPFR -> (MPFR, Int)
-atan2_ r p d d' = withMPFRsBA r p d d' mpfr_atan2 
+atan2_ r p d d' = withMPFRsBA r p d d' mpfr_atan2
 
 sinh_       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
 sinh_ r p d = withMPFR r p d mpfr_sinh
@@ -267,17 +270,17 @@ tanh_ r p d = withMPFR r p d mpfr_tanh
 
 sinhcosh_          :: RoundMode
                    -> Precision -- ^ precision to compute sinh
-                   -> Precision -- ^ precision to compute cosh 
+                   -> Precision -- ^ precision to compute cosh
                    -> MPFR
                    -> (MPFR, MPFR, Int)
-sinhcosh_ r p p' d = unsafePerformIO go 
+sinhcosh_ r p p' d = unsafePerformIO go
     where go = do ls <- mpfr_custom_get_size (fromIntegral p)
                   fp <- mallocForeignPtrBytes (fromIntegral ls)
                   ls' <- mpfr_custom_get_size (fromIntegral p')
                   fp' <- mallocForeignPtrBytes (fromIntegral ls')
-                  alloca $ \p1 -> do 
+                  alloca $ \p1 -> do
                     pokeDummy p1 fp (fromIntegral ls)
-                    alloca $ \p2 -> do 
+                    alloca $ \p2 -> do
                       pokeDummy p2 fp' (fromIntegral ls')
                       with d $ \p3 -> do
                         r3 <- mpfr_sinh_cosh p1 p2 p3 ((fromIntegral . fromEnum) r)
@@ -336,7 +339,10 @@ lgamma_ r p d = unsafePerformIO go
                         r2 <- peek p3
                         r1 <- peekP p1 fp
                         return (r1, fromIntegral r2, fromIntegral r3)
-                    
+
+digamma_       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
+digamma_ r p d = withMPFR r p d mpfr_digamma
+
 zeta_       :: RoundMode -> Precision -> MPFR -> (MPFR, Int)
 zeta_ r p d = withMPFR r p d mpfr_zeta
 
@@ -369,19 +375,19 @@ yn_ r p i d = withMPFRBAis r p (fromIntegral i) d mpfr_yn
 
 fma_                 :: RoundMode -> Precision -> MPFR -> MPFR -> MPFR -> (MPFR, Int)
 fma_ r p mp1 mp2 mp3 = unsafePerformIO go
-    where go = withDummy p $ \p1 -> 
-                 with mp1 $ \p2 -> 
+    where go = withDummy p $ \p1 ->
+                 with mp1 $ \p2 ->
                    with mp2 $ \p3 ->
                      with mp3 $ \p4 ->
-                       mpfr_fma p1 p2 p3 p4 ((fromIntegral . fromEnum) r) 
+                       mpfr_fma p1 p2 p3 p4 ((fromIntegral . fromEnum) r)
 
 fms_                 :: RoundMode -> Precision -> MPFR -> MPFR -> MPFR -> (MPFR, Int)
 fms_ r p mp1 mp2 mp3 = unsafePerformIO go
     where go = withDummy p $ \p1 ->
-                 with mp1 $ \p2 -> 
+                 with mp1 $ \p2 ->
                    with mp2 $ \p3 ->
                      with mp3 $ \p4 ->
-                       mpfr_fms p1 p2 p3 p4 ((fromIntegral . fromEnum) r) 
+                       mpfr_fms p1 p2 p3 p4 ((fromIntegral . fromEnum) r)
 
 agm_           :: RoundMode -> Precision -> MPFR -> MPFR -> (MPFR,Int)
 agm_ r p d1 d2 =  withMPFRsBA r p d1 d2 mpfr_agm
