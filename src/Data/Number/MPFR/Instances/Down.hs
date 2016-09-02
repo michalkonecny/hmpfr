@@ -98,3 +98,20 @@ instance RealFrac MPFR where
               e = denominator r
               n = quot m e
               f = frac Down (getPrec d) d
+
+instance RealFloat MPFR where
+    floatRadix _ = 2
+    floatDigits = fromInteger . toInteger . getPrec
+    floatRange _ = error "floatRange is not defined for MPFR numbers"
+    decodeFloat x = (d,e)
+      where
+      (d,eE) = decompose x
+      e = fromInteger (toInteger eE)
+    encodeFloat d e =
+      (fromInteger d) / ((fromInteger 2)^e) -- TODO: construct it directly
+    isNaN (MP _ _ e _) = (e == expNaN)
+    isInfinite (MP _ _ e _) = (e == expInf)
+    isDenormalized _ = False
+    isNegativeZero d@(MP _ _ e _) = (e == expZero && signbit d)
+    isIEEE _ = False
+    atan2 d1 d2 = S.atan2 Near (maxPrec d1 d2) d1 d2

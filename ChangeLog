@@ -1,3 +1,4 @@
+0.4.2: 2nd Sep 2016: Added RealFloat instances
 0.4.1: 2nd Aug 2016: Added support for digamma
 0.4.: 11th Jul 2016: Compiles only with ghc 7.10 or newer
 0.3.3: 22 Dec 2011: Compiles with both integer-simple and integer-gmp (but mis-behaves with standard integer-gmp).
