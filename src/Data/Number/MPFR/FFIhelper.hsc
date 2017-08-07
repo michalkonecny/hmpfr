@@ -1,4 +1,4 @@
-{-# LANGUAGE ForeignFunctionInterface, DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE ForeignFunctionInterface, DeriveGeneric, DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
 #include <chsmpfr.h>
 #include <mpfr.h>
 
@@ -20,6 +20,7 @@ import Foreign.Storable
 import Foreign.ForeignPtr (ForeignPtr, withForeignPtr, mallocForeignPtrBytes)
 
 import Data.Typeable(Typeable)
+import GHC.Generics(Generic)
 
 import Data.Function(on)
 
@@ -59,7 +60,7 @@ data MPFR = MP { precision :: {-# UNPACK #-} !CPrecision,
                  sign :: {-# UNPACK #-} !Sign,
                  exponent :: {-# UNPACK #-} !Exp,
                  limbs :: {-# UNPACK #-} !(ForeignPtr Limb)
-} deriving (Typeable)
+} deriving (Typeable, Generic)
 
 instance Storable MPFR where
     sizeOf _ = #size __mpfr_struct
