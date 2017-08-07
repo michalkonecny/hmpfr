@@ -1,5 +1,5 @@
 name:                hmpfr
-version:             0.4.2.1
+version:             0.4.3
 synopsis:            Haskell binding to the MPFR library
 description:
   Haskell binding to the MPFR library.
@@ -46,7 +46,8 @@ Library
      build-Depends:    integer-gmp >= 1.0 && < 1.1
      cpp-options: -DINTEGER_GMP
 
-  Other-modules:       Data.Number.MPFR.FFIhelper
+  Exposed-modules:
+                       Data.Number.MPFR.FFIhelper
                        Data.Number.MPFR.Internal
                        Data.Number.MPFR.Mutable.Internal
 
@@ -63,7 +64,7 @@ Library
                        Data.Number.MPFR.Integer
                        Data.Number.MPFR.Misc
 
-  Exposed-modules:     Data.Number.MPFR.Instances.Near
+                       Data.Number.MPFR.Instances.Near
                        Data.Number.MPFR.Instances.Up
                        Data.Number.MPFR.Instances.Down
                        Data.Number.MPFR.Instances.Zero

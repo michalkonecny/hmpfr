@@ -1,3 +1,4 @@
+0.4.3: 7 Aug 2017: expose all modules
 0.4.2.1: 28 Dec 2016: instance Generic MPFR
 0.4.2: 2nd Sep 2016: Added RealFloat instances
 0.4.1: 2nd Aug 2016: Added support for digamma
