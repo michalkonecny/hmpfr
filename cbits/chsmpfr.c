@@ -20,7 +20,11 @@ gmp_randstate_t * new_gmp_randstate() {
   return state;
 }
 
-__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP))
+#if defined (_MPFR_PROTO)
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP));
+#else
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate (mpfr_ptr dP, gmp_randstate_t * rsP);
+#endif
 {
   return mpfr_urandomb(dP, * rsP);
 }

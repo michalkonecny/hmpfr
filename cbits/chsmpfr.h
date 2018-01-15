@@ -8,7 +8,11 @@ void clear (const mpfr_ptr ) ;
 
 gmp_randstate_t * new_gmp_randstate();
 
+#if defined (_MPFR_PROTO)
 __MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP));
+#else
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate (mpfr_ptr dP, gmp_randstate_t * rsP);
+#endif
 
 // these functions are defined as macros and so haskell ffi 
 // can't work with them directly
