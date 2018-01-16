@@ -21,9 +21,9 @@ gmp_randstate_t * new_gmp_randstate() {
 }
 
 #if defined (_MPFR_PROTO)
-__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP));
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate _MPFR_PROTO ((mpfr_ptr dP, gmp_randstate_t * rsP))
 #else
-__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate (mpfr_ptr dP, gmp_randstate_t * rsP);
+__MPFR_DECLSPEC int mpfr_urandomb_deref_randstate (mpfr_ptr dP, gmp_randstate_t * rsP)
 #endif
 {
   return mpfr_urandomb(dP, * rsP);
@@ -37,7 +37,7 @@ int mpfr_inf_p_wrap(const mpfr_ptr p) {
   return mpfr_inf_p(p);
 }
 int mpfr_zero_p_wrap(const mpfr_ptr p) {
-  return mpfr_zero_p(p); 
+  return mpfr_zero_p(p);
 }
 
 int mpfr_set_wrap(const mpfr_ptr p1, const mpfr_ptr p2, mp_rnd_t r) {
@@ -62,7 +62,7 @@ int mpfr_cmp_ui_wrap (const mpfr_ptr p1, unsigned long int p2) {
 
 int mpfr_sgn_wrap (const mpfr_ptr p1) {
   return mpfr_sgn (p1);
-} 
+}
 
 int mpfr_set_si_wrap (const mpfr_ptr p, long int si, mp_rnd_t r) {
   return mpfr_set_si(p, si, r);
@@ -109,7 +109,7 @@ int mpfr_copysign_wrap (const mpfr_ptr p1, const mpfr_ptr p2, const mpfr_ptr p3,
 }
 
 size_t mpfr_custom_get_size_wrap (mp_prec_t p1) {
-  return mpfr_custom_get_size (p1); 
+  return mpfr_custom_get_size (p1);
 }
 
 void mpfr_custom_init_wrap (void *p1 , mp_prec_t p2) {
