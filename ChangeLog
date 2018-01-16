@@ -1,3 +1,4 @@
+0.4.4: 15 Jan 2018: Fix compilation with mpfr-4.0.0.0
 0.4.3: 7 Aug 2017: expose all modules
 0.4.2.1: 28 Dec 2016: instance Generic MPFR
 0.4.2: 2nd Sep 2016: Added RealFloat instances
