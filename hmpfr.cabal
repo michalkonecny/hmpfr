@@ -1,5 +1,5 @@
 name:                hmpfr
-version:             0.4.4
+version:             0.4.5
 synopsis:            Haskell binding to the MPFR library
 description:
   Haskell binding to the MPFR library.
@@ -15,14 +15,14 @@ license:             BSD3
 license-file:        LICENSE
 Stability:           experimental
 Tested-with:
-                GHC==7.10.3
-                GHC==8.0.2
-                GHC==8.2.2
+                GHC==9.0.2
+                GHC==9.2.5
+                GHC==9.4.3
 author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
 Homepage:            https://github.com/michalkonecny/hmpfr
 build-type:          Simple
-cabal-version:       >= 1.6
+cabal-version:       >= 1.8
 Extra-source-files:  demo/Demo.hs
 
 Data-files:
@@ -34,18 +34,8 @@ source-repository head
   type:     git
   location: https://github.com/michalkonecny/hmpfr
 
-flag use-integer-simple
-  description: Use this when compiling using a ghc that uses integer-simple instead of integer-gmp.
-  default: False
-
 Library
   build-Depends:       base >= 4.8 && < 5
-  if flag(use-integer-simple)
-     build-Depends:    integer-simple
-     cpp-options: -DINTEGER_SIMPLE
-  else
-     build-Depends:    integer-gmp >= 1.0 && < 1.1
-     cpp-options: -DINTEGER_GMP
 
   Exposed-modules:
                        Data.Number.MPFR.FFIhelper

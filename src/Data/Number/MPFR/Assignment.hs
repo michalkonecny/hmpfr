@@ -20,15 +20,7 @@ import Data.Number.MPFR.Internal
 
 import Data.Number.MPFR.Arithmetic
 
-#ifdef INTEGER_SIMPLE
-import GHC.Integer.Simple.Internals
-import Foreign.Storable (sizeOf)
-#endif
-
-#ifdef INTEGER_GMP
---import GHC.Integer.GMP.Internals
-import GHC.Float
-#endif
+import GHC.Num.Integer ( integerLogBase )
 
 set     :: RoundMode -> Precision -> MPFR -> MPFR
 set r p = fst . set_ r p
@@ -140,19 +132,7 @@ fromIntegerA r p = stringToMPFR r p 10 . show
 
 bitsInInteger :: (Num a) => Integer -> a
 
-#  ifdef INTEGER_SIMPLE
-bitsInInteger Naught = 0
-bitsInInteger (Positive pos) = bitsInPositive pos
-bitsInInteger (Negative pos) = bitsInPositive pos
-bitsInPositive :: (Num a) => Positive -> a
-bitsInPositive None = 0
-bitsInPositive (Some _ rest) = 
-    (8 * sizeofInt) + (bitsInPositive rest)
-sizeofInt :: (Num a) => a 
-sizeofInt = fromIntegral $ sizeOf (0 :: Int) -- in bytes
-#else
-bitsInInteger = fromIntegral . GHC.Float.integerLogBase 2
-#endif
+bitsInInteger = fromIntegral . integerLogBase 2
 
 compose             :: RoundMode -> Precision -> (Integer, Int) -> MPFR 
 compose r p (i, ii) = div2i r p (fromIntegerA r p i) ii
