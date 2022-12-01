@@ -1,3 +1,4 @@
+cabal-version:       3.0
 name:                hmpfr
 version:             0.4.5
 synopsis:            Haskell binding to the MPFR library
@@ -11,7 +12,7 @@ description:
   Some simple examples of usage can be found in demo/Demo.hs.
 
 category:            Data, Math
-license:             BSD3
+license:             BSD-3-Clause
 license-file:        LICENSE
 Stability:           experimental
 Tested-with:
@@ -22,7 +23,6 @@ author:              Aleš Bizjak, Michal Konečný
 maintainer:          Michal Konečný <mikkonecny@gmail.com>
 Homepage:            https://github.com/michalkonecny/hmpfr
 build-type:          Simple
-cabal-version:       >= 1.8
 Extra-source-files:  demo/Demo.hs
 
 Data-files:
@@ -72,3 +72,4 @@ Library
   c-sources:           cbits/chsmpfr.c
 
   extra-libraries:     mpfr
+  default-language:    Haskell2010
